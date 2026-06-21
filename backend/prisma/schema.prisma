@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  USER
+}
+
+enum PropertyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DISABLED
+}
+
+model User {
+  id         String     @id @default(uuid())
+  fullName   String
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  properties Property[] @relation("OwnerProperties")
+  favorites  Favorite[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  messages   Message[]
+}
+
+model Property {
+  id          String          @id @default(uuid())
+  title       String
+  description String
+  location    String
+  price       Float
+  status      PropertyStatus  @default(DRAFT)
+  publishedAt DateTime?
+  deletedAt   DateTime?
+  ownerId     String
+  owner       User            @relation("OwnerProperties", fields: [ownerId], references: [id], onDelete: Cascade)
+  images      PropertyImage[]
+  favorites   Favorite[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  messages    Message[]
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  imageUrl   String
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderName  String
+  senderEmail String
+  senderPhone String?
+  message     String
+  propertyId  String
+  ownerId     String
+  createdAt   DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id])
+  owner    User     @relation(fields: [ownerId], references: [id])
+}
