@@ -275,7 +275,7 @@ const Home = () => {
         <div className="bg-red-50 text-red-700 p-6 rounded-xl border border-red-100 text-center font-medium">
           Error loading properties: {error.message || 'Please try again later.'}
         </div>
-      ) : !data || data.data.length === 0 ? (
+      ) : !data || data.data?.data?.length === 0 ? (
         <div className="bg-white text-center py-16 px-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
           <div className="text-gray-300 flex justify-center">
             <Search className="w-12 h-12 stroke-[1.5]" />
@@ -296,7 +296,7 @@ const Home = () => {
       ) : (
         <div className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.data.map((property) => (
+            {data.data.data.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
