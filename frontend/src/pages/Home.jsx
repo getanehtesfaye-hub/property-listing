@@ -24,22 +24,22 @@ const Home = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Fetch properties
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['properties', { ...searchParams, sortBy, page }],
-    queryFn: async () => {
-      const response = await getProperties({
-        page,
-        limit,
-        location: searchParams.location,
-        minPrice: searchParams.minPrice,
-        maxPrice: searchParams.maxPrice,
-        sortBy,
-        status: 'PUBLISHED', // regular users/guests only see PUBLISHED
-      });
-      return response.data;
-    },
-    keepPreviousData: true,
-  });
+  const { data, isLoading, isError, error } = useQuery({
+  queryKey: ['properties', { ...searchParams, sortBy, page }],
+  queryFn: async () => {
+    const response = await getProperties({
+      page,
+      limit,
+      location: searchParams.location,
+      minPrice: searchParams.minPrice,
+      maxPrice: searchParams.maxPrice,
+      sortBy,
+      status: 'PUBLISHED',
+    });
+    return response;
+  },
+  keepPreviousData: true,
+});
 
   const handleApplyFilters = (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ const Home = () => {
       maxPrice: '',
     });
   };
-
+ console.log("DATA JSON =", JSON.stringify(data, null, 2));
   return (
     <div className="space-y-8">
       {/* Hero Section */}
@@ -275,7 +275,7 @@ const Home = () => {
         <div className="bg-red-50 text-red-700 p-6 rounded-xl border border-red-100 text-center font-medium">
           Error loading properties: {error.message || 'Please try again later.'}
         </div>
-      ) : !data || data.data?.data?.length === 0 ? (
+      ) : !data || data.data.data.length === 0 ? (
         <div className="bg-white text-center py-16 px-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
           <div className="text-gray-300 flex justify-center">
             <Search className="w-12 h-12 stroke-[1.5]" />
@@ -296,7 +296,7 @@ const Home = () => {
       ) : (
         <div className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.data.data.map((property) => (
+           {data.data.data.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
