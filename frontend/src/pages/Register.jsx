@@ -65,7 +65,7 @@ const Register = () => {
           </div>
           <h2 className="text-2xl font-extrabold text-gray-900">Create Account</h2>
           <p className="text-sm text-gray-500 font-medium">
-            Join HavenHub as a tenant, property owner, or admin.
+            Join aveline property as a tenant, property owner, or admin.
           </p>
         </div>
 

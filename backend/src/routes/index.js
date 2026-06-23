@@ -7,6 +7,12 @@ const favoritesRoutes = require('./favorites.routes');
 const messageRoutes = require('./message.routes');
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Property Listing API is running'
+  });
+});
 router.use('/auth', authRoutes);
 router.use('/properties', propertyRoutes);
 router.use('/admin', adminRoutes);
